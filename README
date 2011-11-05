@@ -1,12 +1,12 @@
 This is script to download images from tumblr blogs.
 
 このスクリプトは、Tumblrから画像を一括にダウンロードするためのものです。
-Pythonで書かれています。
+
 ・指定されたTumblrのブログより画像を全てダウンロードして保存します。
 ・ログを保存するため、二回目以降に走らせた場合は、前回との差分のみを保存します。
 ・複数のブログを指定することが可能です。
 
-APIを利用するため、スクリプトを走らせるためには、Tumblr APIのアプリケーション登録を行い、CONSUMER KEYを得る必要があります(AUTH TOKENはいりません)。
+APIを利用するため、スクリプトを走らせるためには、Tumblr APIのアプリケーション登録を行い、CONSUMER KEYを得る必要があります(OAUTH TOKENを取得する必要はありません)。
 
 このスクリプトは、まず、初回の起動では全て、次回以降の起動では差分だけ、TumblrのPhoto投稿をAPIで取得し画像のURLリストを取得します。
 そのURLリストによって、写真をダウンロードして保存します。
@@ -19,7 +19,7 @@ APIを利用するため、スクリプトを走らせるためには、Tumblr A
 {
 	"consumer_key": "INPUT YOUR CONSUMER KEY",
 	"blogs": [
-        "001.tumblr.com",
+		"001.tumblr.com",
 		"002.tumblr.com"
 	]
 }
