@@ -8,13 +8,11 @@ This is script to download images from tumblr blogs.
 
 APIを利用するため、スクリプトを走らせるためには、Tumblr APIのアプリケーション登録を行い、CONSUMER KEYを得る必要があります(OAUTH TOKENを取得する必要はありません)。
 
-このスクリプトは、まず、初回の起動では全て、次回以降の起動では差分だけ、TumblrのPhoto投稿をAPIで取得し画像のURLリストを取得します。
-そのURLリストによって、写真をダウンロードして保存します。
+このスクリプトは、まず、初回の起動では全て、次回以降の起動では差分だけ、TumblrのPhoto投稿をAPIで取得し画像のダウンロードを行います。
 画像は'img'ディレクトリが作られ、その下にブログ別に保存されていきます。
-自分の試したブログの投稿は2000件程度だったので、あまり投稿が多いと、正しく動作するかはわかりません。
 
-設定ファイル(setting.json)には設定を記述します。
-設定といっても、今のところ、CONSUMER KEYとダウンロードとしたいブログのドメインを書くだけです。
+設定ファイル(config.json)には設定を記述します。
+設定には、CONSUMER KEYとダウンロードとしたいブログのドメインを書きます。
 
 {
 	"consumer_key": "INPUT YOUR CONSUMER KEY",
@@ -29,4 +27,14 @@ APIを利用するため、スクリプトを走らせるためには、Tumblr A
 python main.py
 
 により行えます。
+
+
+設定ファイルにブログのドメインを設定しない場合は、オプションにより指定することもできます。
+
+python main.py --blog==001.tumblr.com
+
+特定の投稿以降の投稿をダウンロード対象にする場合は、last_idオプションを指定します。
+この場合は、blogオプションにより対象のブログも指定して下さい。
+
+python main.py --last_id=12365373815 --blog=001.tumblr.com
 
