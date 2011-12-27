@@ -1,5 +1,5 @@
 # vim:fileencoding=utf-8
-import os, sys
+import os, sys, getopt
 import urllib, urllib2
 import json
 import datetime
@@ -182,7 +182,27 @@ def download_image(src, dest_dir, base_fname):
 
 
 if __name__ == '__main__':
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], '', ['blog=', 'last_id='])
+    except getopt.GetoptError, e:
+        sys.stderr.write( str(e) )
+        sys.exit(2)
     
+    opt_blog = None
+    opt_last_id = None
+    for o, v in opts:
+        if o == '--blog':
+            opt_blog = v
+        elif o == '--last_id':
+            for _o, _v in opts:
+                if _o == '--blog':
+                    opt_last_id = v
+                    break
+            else:
+                sys.stderr.write( 'If you specify last_id of downloading posts, you need specify the blog domain too as option' )
+                sys.exit(2)
+
+
     print 'loading config'
     config = Config()
     config.load()
@@ -190,19 +210,29 @@ if __name__ == '__main__':
 
     tumblr = SimpleTumblr(consumer_key)
 
+    if opt_blog is None:
+        blogs = config.blogs
+    else:
+        blogs = [opt_blog]
+
     print 'start downloading'
-    for blog_domain in config.blogs:
+
+    for blog_domain in blogs:
 
         print 'loading a log of %s' % blog_domain
         #load logs
         logs = Logs(blog_domain)
         logs.load()
         logs.init_current()
-        if len(logs.histories)>0:
-            recent = logs.histories[-1]
-            last_id = recent.last_id
+        if opt_last_id is None:
+            if len(logs.histories)>0:
+                recent = logs.histories[-1]
+                last_id = int(recent.last_id)
+            else:
+                last_id = 0
         else:
-            last_id = 0
+            last_id = int(opt_last_id)
+
 
         limit = 20 # 20 is max
         offset = 0
@@ -225,7 +255,7 @@ if __name__ == '__main__':
             result = tumblr.api_blog_posts(blog_domain, 'photo', {'limit':limit, 'offset':offset})['response']['posts']
             if result:
                 for postdata in result:
-                    if postdata['id'] > last_id:
+                    if int(postdata['id']) > last_id:
                         posts.append( DownloadPost.create_from_apidata(postdata) )
                     else:
                        break
