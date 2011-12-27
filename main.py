@@ -265,7 +265,6 @@ if __name__ == '__main__':
                     do_next = True
 
             #download images
-            print 'starting to download photos'
             for post in posts:
                 for i,photo_url in enumerate(post.urls):
                     if len(post.urls)>1:
